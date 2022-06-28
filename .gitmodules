@@ -1,0 +1,3 @@
+[submodule "Plugins/EpicOnlineSubsystem"]
+	path = Plugins/EpicOnlineSubsystem
+	url = git@src.redpoint.games:redpointgames/eos-online-subsystem
