@@ -203,6 +203,7 @@ bool UExampleCPPSubsystem::CanLinkToEpicGamesAccount(const UObject *WorldContext
 void UExampleCPPSubsystem::StartLogin(
     const UObject *WorldContextObject,
     int32 LocalUserNum,
+    FString Token,
     FExampleCPPSubsystemLoginComplete OnDone)
 {
     IOnlineSubsystem *Subsystem = Online::GetSubsystem(WorldContextObject->GetWorld());
@@ -227,7 +228,10 @@ void UExampleCPPSubsystem::StartLogin(
             &UExampleCPPSubsystem::HandleLoginComplete,
             WorldContextObject,
             OnDone));
-    if (!Identity->AutoLogin(LocalUserNum))
+
+    FOnlineAccountCredentials Credentials = FOnlineAccountCredentials();
+    Credentials.Token = Token;
+    if (!Identity->Login(LocalUserNum, Credentials))
     {
         OnDone.ExecuteIfBound(false, TEXT("Call didn't start"));
     }

@@ -224,7 +224,7 @@ public:
     FUniqueNetIdRepl GetLoggedInUserId(const UObject *WorldContextObject);
 
     UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
-    void StartLogin(const UObject *WorldContextObject, int32 LocalUserNum, FExampleCPPSubsystemLoginComplete OnDone);
+    void StartLogin(const UObject *WorldContextObject, int32 LocalUserNum, FString Code, FExampleCPPSubsystemLoginComplete OnDone);
 
     UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
     bool CanLinkToEpicGamesAccount(const UObject *WorldContextObject);
