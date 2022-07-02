@@ -1,6 +1,8 @@
 {
 	"FileVersion": 3,
 	"EngineAssociation": "5.0",
+	"Category": "",
+	"Description": "",
 	"Modules": [
 		{
 			"Name": "ExampleOSSEarlyConfig",
@@ -12,7 +14,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"CoreUObject"
 			]
 		}
 	],
@@ -22,9 +25,13 @@
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/2c92594ce5aa416c8bfbd79275389e3b"
 		},
-        {
-          "Name": "Gauntlet",
-          "Enabled": true
-        }
+		{
+			"Name": "Gauntlet",
+			"Enabled": true
+		},
+		{
+			"Name": "WebBrowserWidget",
+			"Enabled": true
+		}
 	]
 }
