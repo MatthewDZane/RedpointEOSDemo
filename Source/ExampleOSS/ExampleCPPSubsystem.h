@@ -710,6 +710,9 @@ private:
     /********** ExampleCPPSubsystem.Session.cpp **********/
 
 private:
+    FString ResultConnectInfo = "";
+    
+private:
     void OnFindSessionForLeaderFollow(
         int32 LocalUserNum,
         bool bWasSuccessful,

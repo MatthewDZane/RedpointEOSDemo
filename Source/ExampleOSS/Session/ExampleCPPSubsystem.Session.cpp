@@ -10,6 +10,7 @@
 #include "Interfaces/OnlinePresenceInterface.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
+#include "ExampleOSS/MyGameModeBase.h"
 
 void UExampleCPPSubsystem::OnFindSessionForLeaderFollow(
     int32 LocalUserNum,
@@ -312,10 +313,8 @@ TArray<FString> UExampleCPPSubsystem::GetPlayersInSession(const UObject *WorldCo
 
 void UExampleCPPSubsystem::RegisterExistingPlayers(const UObject *WorldContextObject)
 {
-    for (auto It = WorldContextObject->GetWorld()->GetPlayerControllerIterator(); It; --It)
-    {
-        this->RegisterPlayer(It->Get());
-    }
+    AMyGameModeBase *GameMode = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode());
+    GameMode->RegisterExistingPlayers();
 }
 
 FUniqueNetIdRepl UExampleCPPSubsystem::RegisterPlayer(APlayerController *InPlayerController)
@@ -367,21 +366,8 @@ FUniqueNetIdRepl UExampleCPPSubsystem::RegisterPlayer(APlayerController *InPlaye
 
 void UExampleCPPSubsystem::UnregisterPlayer(APlayerController *InPlayerController, FUniqueNetIdRepl UniqueNetIdRepl)
 {
-    check(IsValid(InPlayerController));
-
-    TSharedPtr<const FUniqueNetId> UniqueNetId = UniqueNetIdRepl.GetUniqueNetId();
-    if (!UniqueNetId.IsValid())
-    {
-        UE_LOG(LogTemp, Error, TEXT("No unique net ID assocated with connection, can not unregister player"));
-        return;
-    }
-
-    IOnlineSubsystem *Subsystem = Online::GetSubsystem(InPlayerController->GetWorld());
-    check(Subsystem != nullptr);
-    IOnlineSessionPtr Session = Subsystem->GetSessionInterface();
-    check(Session != nullptr);
-
-    verify(Session->UnregisterPlayer(FName(TEXT("MyLocalSessionName")), *UniqueNetId));
+    AMyGameModeBase *GameMode = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode());
+    GameMode->PreLogout(InPlayerController);
 }
 
 void UExampleCPPSubsystem::StartStartSession(
@@ -560,6 +546,7 @@ void UExampleCPPSubsystem::StartJoinSession(
     IOnlineSubsystem *Subsystem = Online::GetSubsystem(WorldContextObject->GetWorld());
     if (Subsystem == nullptr)
     {
+        UE_LOG(LogTemp, Error, TEXT("Subsystem is null"));
         OnDone.ExecuteIfBound(false);
         return;
     }
@@ -569,6 +556,7 @@ void UExampleCPPSubsystem::StartJoinSession(
     // multiple in flight you probably need to make a latent blueprint node.
     if (this->JoinSessionDelegateHandle.IsValid())
     {
+        UE_LOG(LogTemp, Error, TEXT("JoinSessionDelegateHandle is not valid."));
         OnDone.ExecuteIfBound(false);
         return;
     }
@@ -583,7 +571,13 @@ void UExampleCPPSubsystem::StartJoinSession(
             OnDone));
     if (!Session->JoinSession(0, FName(TEXT("MyLocalSessionName")), SearchResult->Result))
     {
+        UE_LOG(LogTemp, Error, TEXT("JoinSession failed."));
+        ResultConnectInfo = "";
         OnDone.ExecuteIfBound(false);
+    }
+    else
+    {
+        ResultConnectInfo = SearchResult->ConnectionString;
     }
 }
 
@@ -596,6 +590,7 @@ void UExampleCPPSubsystem::HandleJoinSessionComplete(
     if (!SessionName.IsEqual(FName(TEXT("MyLocalSessionName"))))
     {
         // Since we can conflict with the party leader following stuff... ugh the sessions API...
+        UE_LOG(LogTemp, Error, TEXT("SessionName is different."));
         return;
     }
 
@@ -603,6 +598,20 @@ void UExampleCPPSubsystem::HandleJoinSessionComplete(
         JoinResult == EOnJoinSessionCompleteResult::Success ||
         JoinResult == EOnJoinSessionCompleteResult::AlreadyInSession);
 
+    if (JoinResult == EOnJoinSessionCompleteResult::Success ||
+    JoinResult == EOnJoinSessionCompleteResult::AlreadyInSession)
+    {
+        if (GEngine != nullptr)
+        {
+            FURL NewURL(nullptr, *ResultConnectInfo, ETravelType::TRAVEL_Absolute);
+            FString BrowseError;
+            if (GEngine->Browse(GEngine->GetWorldContextFromWorldChecked(this->GetWorld()), NewURL, BrowseError) ==
+                EBrowseReturnVal::Failure)
+            {
+                UE_LOG(LogTemp, Error, TEXT("Failed to start browse: %s"), *BrowseError);
+            }
+        }
+    }
     IOnlineSubsystem *Subsystem = Online::GetSubsystem(WorldContextObject->GetWorld());
     if (Subsystem == nullptr)
     {
