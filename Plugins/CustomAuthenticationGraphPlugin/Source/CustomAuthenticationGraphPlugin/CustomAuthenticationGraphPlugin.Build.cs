@@ -28,7 +28,7 @@ public class CustomAuthenticationGraphPlugin : ModuleRules
 			{
 				"Core",
 				"OnlineSubsystemRedpointEOS",
-				"Json"
+				"Json",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -41,7 +41,8 @@ public class CustomAuthenticationGraphPlugin : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"HTTP"
+				"HTTP",
+				"RedpointEOSSDK"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
