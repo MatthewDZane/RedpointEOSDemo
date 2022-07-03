@@ -1,16 +1,17 @@
-﻿#if EOS_HAS_AUTHENTICATION
+﻿
+#if EOS_HAS_AUTHENTICATION
 
 #include "CustomCrossPlatformAccountProvider.h"
 
 #include "GetJwtForCustomNode.h"
 
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/AuthenticationGraph.h"
-#include "OnlineSubsystemRedpointEOS/Shared/Authentication/CrossPlatform/SimpleFirstParty/PerformOpenIdLoginForCrossPlatformFPNode.h"
+#include "CustomAuthenticationGraphNode.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/Nodes/AuthenticationGraphNodeUntil_Forever.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/Nodes/FailAuthenticationNode.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/Nodes/NoopAuthenticationGraphNode.h"
 
-FCustomCrossPlatformAccountId::FCustomCrossPlatformAccountId(int64 InFirstPartyAccountId)
+FCustomCrossPlatformAccountId::FCustomCrossPlatformAccountId(EOS_ProductUserId InFirstPartyAccountId)
     : DataBytes(nullptr)
     , DataBytesSize(0)
     , FirstPartyAccountId(InFirstPartyAccountId)
@@ -68,14 +69,31 @@ FString FCustomCrossPlatformAccountId::ToString() const
     return FString::Printf(TEXT("%lld"), this->FirstPartyAccountId);
 }
 
-int64 FCustomCrossPlatformAccountId::GetFirstPartyAccountId() const
+FString FCustomCrossPlatformAccountId::GetFirstPartyAccountId() const
 {
-    return this->FirstPartyAccountId;
+    if (EOSString_ProductUserId::IsNone(this->FirstPartyAccountId))
+    {
+        return TEXT("");
+    }
+
+    FString Str;
+    if (EOSString_ProductUserId::ToString(this->FirstPartyAccountId, Str) == EOS_EResult::EOS_Success)
+    {
+        return Str;
+    }
+
+    return TEXT("");
 }
 
 TSharedPtr<const FCrossPlatformAccountId> FCustomCrossPlatformAccountId::ParseFromString(const FString &In)
 {
-    return MakeShared<FCustomCrossPlatformAccountId>(FCString::Atoi64(*In));
+    EOS_ProductUserId ProductUserId = nullptr;
+    if (EOSString_ProductUserId::FromString(In, ProductUserId) != EOS_EResult::EOS_Success)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Malformed Epic account ID component of unique net ID: %s"), *In);
+        return nullptr;
+    }
+    return MakeShared<FCustomCrossPlatformAccountId>(ProductUserId);
 }
 
 FName FCustomCrossPlatformAccountProvider::GetName()
@@ -102,7 +120,8 @@ TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
 {
     return MakeShared<FAuthenticationGraphNodeUntil_Forever>()
         ->Add(MakeShared<FGetJwtForCustomNode>())
-        ->Add(MakeShared<FPerformOpenIdLoginForCrossPlatformFPNode>());
+        //->Add(MakeShared<FCustomAuthenticationGraphNode>())
+        ->Add(MakeShared<FCustomAuthenticationGraphNode>());
 }
 
 TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
@@ -110,7 +129,8 @@ TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
 {
     return MakeShared<FAuthenticationGraphNodeUntil_Forever>()
         ->Add(MakeShared<FGetJwtForCustomNode>())
-        ->Add(MakeShared<FPerformOpenIdLoginForCrossPlatformFPNode>());
+        //->Add(MakeShared<FCustomAuthenticationGraphNode>())
+        ->Add(MakeShared<FCustomAuthenticationGraphNode>());
 }
 
 TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::

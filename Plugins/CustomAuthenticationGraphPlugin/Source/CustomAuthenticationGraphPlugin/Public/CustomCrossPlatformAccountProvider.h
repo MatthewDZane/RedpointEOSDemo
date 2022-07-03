@@ -16,10 +16,10 @@ class FCustomCrossPlatformAccountId  : public FCrossPlatformAccountId
 private:
     uint8 *DataBytes;
     int32 DataBytesSize;
-    int64 FirstPartyAccountId;
+    EOS_ProductUserId FirstPartyAccountId;
 
 public:
-    FCustomCrossPlatformAccountId(int64 InFirstPartyAccountId);
+    FCustomCrossPlatformAccountId(EOS_ProductUserId InFirstPartyAccountId);
     virtual ~FCustomCrossPlatformAccountId();
     UE_NONCOPYABLE(FCustomCrossPlatformAccountId);
 
@@ -32,7 +32,7 @@ public:
 
     static TSharedPtr<const FCrossPlatformAccountId> ParseFromString(const FString &In);
 
-    int64 GetFirstPartyAccountId() const;
+    FString GetFirstPartyAccountId() const;
 };
 
 class FCustomCrossPlatformAccountProvider
