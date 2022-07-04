@@ -1,16 +1,16 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "CustomAuthenticationGraphPlugin.h"
+#include "CILogonEOSAuthentication.h"
 
 #include "CILogonAuthenticationGraph.h"
 #include "CILogonCrossPlatformAccountProvider.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/AuthenticationGraphRegistry.h"
 
-#define LOCTEXT_NAMESPACE "FCustomAuthenticationGraphPluginModule"
+#define LOCTEXT_NAMESPACE "FCILogonEOSAuthenticationModule"
 
-DEFINE_LOG_CATEGORY(LogCustom);
+DEFINE_LOG_CATEGORY(LogCILogon);
 
-void FCustomAuthenticationGraphPluginModule::StartupModule()
+void FCILogonEOSAuthenticationModule::StartupModule()
 {
 	FCILogonAuthenticationGraph::Register();
 	FAuthenticationGraphRegistry::RegisterCrossPlatformAccountProvider(
@@ -19,7 +19,7 @@ void FCustomAuthenticationGraphPluginModule::StartupModule()
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FCustomAuthenticationGraphPluginModule::ShutdownModule()
+void FCILogonEOSAuthenticationModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
@@ -27,4 +27,4 @@ void FCustomAuthenticationGraphPluginModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FCustomAuthenticationGraphPluginModule, CustomAuthenticationGraphPlugin)
+IMPLEMENT_MODULE(FCILogonEOSAuthenticationModule, CILogonEOSAuthentication)

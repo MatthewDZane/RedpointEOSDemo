@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogCustom, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogCILogon, Log, All);
 
-class FCustomAuthenticationGraphPluginModule : public IModuleInterface
+class CILOGONEOSAUTHENTICATION_API FCILogonEOSAuthenticationModule
+	: public IModuleInterface
 {
 public:
 

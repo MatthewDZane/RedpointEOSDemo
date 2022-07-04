@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "CustomAuthenticationGraphPlugin",
+	"FriendlyName": "CILogonEOSAuthentication",
 	"Description": "",
 	"Category": "Other",
 	"CreatedBy": "Matthew Zane",
@@ -16,7 +16,7 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "CustomAuthenticationGraphPlugin",
+			"Name": "CILogonEOSAuthentication",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
@@ -24,6 +24,10 @@
 	"Plugins": [
 		{
 			"Name": "OnlineSubsystemRedpointEOS",
+			"Enabled": true
+		},
+		{
+			"Name": "WebBrowserWidget",
 			"Enabled": true
 		}
 	]

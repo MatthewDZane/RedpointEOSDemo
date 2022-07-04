@@ -9,7 +9,8 @@
 
 #define CILOGON_EOS_AUTH_GRAPH FName(TEXT("CILogonAuthGraph"))
 
-class FCILogonAuthenticationGraph : public FAuthenticationGraph
+class CILOGONEOSAUTHENTICATION_API FCILogonAuthenticationGraph
+	: public FAuthenticationGraph
 {
 protected:
 	virtual TSharedRef<FAuthenticationGraphNode> CreateGraph(

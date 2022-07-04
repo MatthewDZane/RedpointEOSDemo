@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class CustomAuthenticationGraphPlugin : ModuleRules
+public class CILogonEOSAuthentication : ModuleRules
 {
-	public CustomAuthenticationGraphPlugin(ReadOnlyTargetRules Target) : base(Target)
+	public CILogonEOSAuthentication(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
@@ -13,14 +13,14 @@ public class CustomAuthenticationGraphPlugin : ModuleRules
 				ModuleDirectory + "/../../../../Plugins/EpicOnlineSubsystem/OnlineSubsystemRedpointEOS/Source/ThirdParty/Include"
 				// ... add public include paths required here ...
 			}
-			);
+		);
 				
 		
 		PrivateIncludePaths.AddRange(
 			new string[] {
 				// ... add other private include paths required here ...
 			}
-			);
+		);
 			
 		
 		PublicDependencyModuleNames.AddRange(
@@ -31,7 +31,7 @@ public class CustomAuthenticationGraphPlugin : ModuleRules
 				"Json",
 				// ... add other public dependencies that you statically link with here ...
 			}
-			);
+		);
 			
 		
 		PrivateDependencyModuleNames.AddRange(
@@ -45,7 +45,7 @@ public class CustomAuthenticationGraphPlugin : ModuleRules
 				"RedpointEOSSDK"
 				// ... add private dependencies that you statically link with here ...	
 			}
-			);
+		);
 		
 		
 		DynamicallyLoadedModuleNames.AddRange(
@@ -53,6 +53,6 @@ public class CustomAuthenticationGraphPlugin : ModuleRules
 			{
 				// ... add any modules that your module loads dynamically here ...
 			}
-			);
+		);
 	}
 }

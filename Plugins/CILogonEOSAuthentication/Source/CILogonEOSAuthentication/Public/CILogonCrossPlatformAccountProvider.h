@@ -11,7 +11,8 @@
 
 EOS_ENABLE_STRICT_WARNINGS
 
-class FCILogonCrossPlatformAccountId  : public FCrossPlatformAccountId
+class CILOGONEOSAUTHENTICATION_API FCILogonCrossPlatformAccountId
+    : public FCrossPlatformAccountId
 {
 private:
     uint8 *DataBytes;
@@ -35,7 +36,7 @@ public:
     FString GetFirstPartyAccountId() const;
 };
 
-class FCILogonCrossPlatformAccountProvider
+class CILOGONEOSAUTHENTICATION_API FCILogonCrossPlatformAccountProvider
     : public ICrossPlatformAccountProvider
 {
 public:

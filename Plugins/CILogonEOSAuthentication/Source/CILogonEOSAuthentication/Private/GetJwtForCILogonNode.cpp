@@ -2,7 +2,6 @@
 
 #include "GetJwtForCILogonNode.h"
 
-#include "CustomAuthenticationGraphPlugin.h"
 #include "Dom/JsonObject.h"
 #include "Dom/JsonValue.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/AuthenticationHelpers.h"
@@ -80,7 +79,7 @@ void FGetJwtForCILogonNode::OnCILogonTokenResponse(
     int ExpiresIn = (*JsonObject)->GetIntegerField("expires_in");
     
     UE_LOG(
-        LogCustom,
+        LogTemp,
         Verbose,
         TEXT("Obtained CILogon data for first party login, access token: '%s', id token: '%s', token type: '%s', expires in: '%d'"),
         *AccessToken,
@@ -273,7 +272,7 @@ void FGetJwtForCILogonNode::OnCloudFlareHttpResponse(
 
     
     UE_LOG(
-        LogCustom,
+        LogTemp,
         Verbose,
         TEXT("Obtained data for first party login, user ID: '%s', access token: '%s'"),
         *UserId,

@@ -11,7 +11,8 @@
 
 EOS_ENABLE_STRICT_WARNINGS
 
-class FGetJwtForCILogonNode : public FAuthenticationGraphNode
+class CILOGONEOSAUTHENTICATION_API FGetJwtForCILogonNode
+	: public FAuthenticationGraphNode
 {
 private:
 	void OnCILogonTokenResponse(

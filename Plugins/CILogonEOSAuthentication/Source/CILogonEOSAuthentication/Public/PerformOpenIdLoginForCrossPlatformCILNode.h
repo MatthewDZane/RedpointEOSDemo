@@ -9,7 +9,8 @@
 
 EOS_ENABLE_STRICT_WARNINGS
 
-class FPerformOpenIdLoginForCrossPlatformCILNode : public FAuthenticationGraphNode
+class CILOGONEOSAUTHENTICATION_API FPerformOpenIdLoginForCrossPlatformCILNode
+	: public FAuthenticationGraphNode
 {
 private:
 	void HandleEOSAuthenticationCallback(
