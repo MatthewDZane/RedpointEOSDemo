@@ -30,7 +30,7 @@
 			"Enabled": true
 		},
 		{
-			"Name": "WebBrowserWidget",
+			"Name": "CILogonEOSAuthentication",
 			"Enabled": true
 		}
 	]
