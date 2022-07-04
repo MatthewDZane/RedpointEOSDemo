@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "MyGameModeBase.generated.h"
+#include "MultiplayerGameModeBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class EXAMPLEOSS_API AMyGameModeBase : public AGameModeBase
+class EXAMPLEOSS_API AMultiplayerGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 public:

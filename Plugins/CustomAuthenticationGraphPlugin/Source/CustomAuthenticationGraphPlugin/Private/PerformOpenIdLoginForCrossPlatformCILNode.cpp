@@ -1,9 +1,9 @@
 ﻿
 #if EOS_HAS_AUTHENTICATION
 
-#include "CustomAuthenticationGraphNode.h"
+#include "PerformOpenIdLoginForCrossPlatformCILNode.h"
 
-#include "CustomCrossPlatformAccountProvider.h"
+#include "CILogonCrossPlatformAccountProvider.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/AuthenticationHelpers.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/CrossPlatform/SimpleFirstPartyCrossPlatformAccountProvider.h"
 #include "OnlineSubsystemRedpointEOS/Shared/EOSCommon.h"
@@ -12,7 +12,7 @@
 
 EOS_ENABLE_STRICT_WARNINGS
 
-void FCustomAuthenticationGraphNode::HandleEOSAuthenticationCallback(
+void FPerformOpenIdLoginForCrossPlatformCILNode::HandleEOSAuthenticationCallback(
     const EOS_Connect_LoginCallbackInfo *Data,
     // NOLINTNEXTLINE(performance-unnecessary-value-param)
     TSharedRef<FAuthenticationGraphState> State,
@@ -30,7 +30,7 @@ void FCustomAuthenticationGraphNode::HandleEOSAuthenticationCallback(
             MakeShared<FSimpleFirstPartyCrossPlatformAccountId>(
                 FCString::Atoi64(*(State->Metadata["FIRST_PARTY_USER_ID"].GetValue<FString>()))));
 
-        State->AuthenticatedCrossPlatformAccountId = MakeShared<FCustomCrossPlatformAccountId>(Data->LocalUserId);
+        State->AuthenticatedCrossPlatformAccountId = MakeShared<FCILogonCrossPlatformAccountId>(Data->LocalUserId);
 
         OnDone.ExecuteIfBound(EAuthenticationGraphNodeResult::Continue);
     }
@@ -50,7 +50,7 @@ void FCustomAuthenticationGraphNode::HandleEOSAuthenticationCallback(
     }
 }
 
-void FCustomAuthenticationGraphNode::Execute(
+void FPerformOpenIdLoginForCrossPlatformCILNode::Execute(
     TSharedRef<FAuthenticationGraphState> State,
     FAuthenticationGraphNodeOnDone OnDone)
 {
@@ -69,7 +69,7 @@ void FCustomAuthenticationGraphNode::Execute(
         EOS_EExternalCredentialType::EOS_ECT_OPENID_ACCESS_TOKEN,
         FEOSAuth_DoRequestComplete::CreateSP(
             this,
-            &FCustomAuthenticationGraphNode::HandleEOSAuthenticationCallback,
+            &FPerformOpenIdLoginForCrossPlatformCILNode::HandleEOSAuthenticationCallback,
             State,
             OnDone));
 }

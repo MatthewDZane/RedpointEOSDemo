@@ -9,7 +9,7 @@
 
 EOS_ENABLE_STRICT_WARNINGS
 
-class FCustomAuthenticationGraphNode : public FAuthenticationGraphNode
+class FPerformOpenIdLoginForCrossPlatformCILNode : public FAuthenticationGraphNode
 {
 private:
 	void HandleEOSAuthenticationCallback(
@@ -17,9 +17,9 @@ private:
 		TSharedRef<FAuthenticationGraphState> State, 
 		FAuthenticationGraphNodeOnDone OnDone);
 public:
-	UE_NONCOPYABLE(FCustomAuthenticationGraphNode);
-	FCustomAuthenticationGraphNode() = default;
-	virtual ~FCustomAuthenticationGraphNode() = default;
+	UE_NONCOPYABLE(FPerformOpenIdLoginForCrossPlatformCILNode);
+	FPerformOpenIdLoginForCrossPlatformCILNode() = default;
+	virtual ~FPerformOpenIdLoginForCrossPlatformCILNode() = default;
 	
 	virtual void Execute(TSharedRef<FAuthenticationGraphState> State, FAuthenticationGraphNodeOnDone OnDone) override;
 

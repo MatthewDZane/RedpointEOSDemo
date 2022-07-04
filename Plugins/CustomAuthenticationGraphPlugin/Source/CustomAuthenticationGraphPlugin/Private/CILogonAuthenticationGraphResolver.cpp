@@ -1,6 +1,6 @@
-﻿#include "FCustomAuthenticationGraphResolver.h"
+﻿#include "CILogonAuthenticationGraphResolver.h"
 
-FName FCustomAuthenticationGraphResolver::Resolve(
+FName FCILogonAuthenticationGraphResolver::Resolve(
 	TSharedRef<class FAuthenticationGraphRegistry> InRegistry,
 	TSharedRef<class FEOSConfig> InConfig,
 	FOnlineAccountCredentials InProvidedCredentials,

@@ -11,7 +11,7 @@
 
 EOS_ENABLE_STRICT_WARNINGS
 
-class FGetJwtForCustomNode : public FAuthenticationGraphNode
+class FGetJwtForCILogonNode : public FAuthenticationGraphNode
 {
 private:
 	void OnCILogonTokenResponse(
@@ -36,15 +36,15 @@ private:
 		FAuthenticationGraphNodeOnDone OnDone);
 
 public:
-	UE_NONCOPYABLE(FGetJwtForCustomNode);
-	FGetJwtForCustomNode() = default;
-	virtual ~FGetJwtForCustomNode() = default;
+	UE_NONCOPYABLE(FGetJwtForCILogonNode);
+	FGetJwtForCILogonNode() = default;
+	virtual ~FGetJwtForCILogonNode() = default;
 
 	virtual void Execute(TSharedRef<FAuthenticationGraphState> State, FAuthenticationGraphNodeOnDone OnDone) override;
 
 	virtual FString GetDebugName() const override
 	{
-		return TEXT("FGetJwtForCustomNode");
+		return TEXT("FGetJwtForCILogonNode");
 	}
 };
 

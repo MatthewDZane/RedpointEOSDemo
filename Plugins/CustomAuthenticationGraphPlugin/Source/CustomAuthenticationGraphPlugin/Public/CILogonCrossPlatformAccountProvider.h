@@ -7,11 +7,11 @@
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/CrossPlatform/CrossPlatformAccountId.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/CrossPlatform/CrossPlatformAccountProvider.h"
 
-#define CUSTOM_CROSS_PLATFORM_ACCOUNT_ID FName(TEXT("CustomCrossPlatformAccountSystem"))
+#define CILOGON_CROSS_PLATFORM_ACCOUNT_ID FName(TEXT("CILogonCrossPlatformAccountSystem"))
 
 EOS_ENABLE_STRICT_WARNINGS
 
-class FCustomCrossPlatformAccountId  : public FCrossPlatformAccountId
+class FCILogonCrossPlatformAccountId  : public FCrossPlatformAccountId
 {
 private:
     uint8 *DataBytes;
@@ -19,9 +19,9 @@ private:
     EOS_ProductUserId FirstPartyAccountId;
 
 public:
-    FCustomCrossPlatformAccountId(EOS_ProductUserId InFirstPartyAccountId);
-    virtual ~FCustomCrossPlatformAccountId();
-    UE_NONCOPYABLE(FCustomCrossPlatformAccountId);
+    FCILogonCrossPlatformAccountId(EOS_ProductUserId InFirstPartyAccountId);
+    virtual ~FCILogonCrossPlatformAccountId();
+    UE_NONCOPYABLE(FCILogonCrossPlatformAccountId);
 
     virtual bool Compare(const FCrossPlatformAccountId &Other) const override;
     virtual FName GetType() const override;
@@ -35,11 +35,11 @@ public:
     FString GetFirstPartyAccountId() const;
 };
 
-class FCustomCrossPlatformAccountProvider
+class FCILogonCrossPlatformAccountProvider
     : public ICrossPlatformAccountProvider
 {
 public:
-    FCustomCrossPlatformAccountProvider(){};
+    FCILogonCrossPlatformAccountProvider(){};
 
     virtual FName GetName() override;
     virtual TSharedPtr<const FCrossPlatformAccountId> CreateCrossPlatformAccountId(

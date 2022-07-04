@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyGameModeBase.h"
+#include "MultiplayerGameModeBase.h"
 
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
 
-void AMyGameModeBase::RegisterExistingPlayers()
+void AMultiplayerGameModeBase::RegisterExistingPlayers()
 {
 	for (auto It = this->GetWorld()->GetPlayerControllerIterator(); It; --It)
 	{
@@ -63,7 +63,7 @@ void AMyGameModeBase::RegisterExistingPlayers()
 	this->bAllExistingPlayersRegistered = true;
 }
 
-void AMyGameModeBase::PostLogin(APlayerController* InPlayerController)
+void AMultiplayerGameModeBase::PostLogin(APlayerController* InPlayerController)
 {
 	if (!this->bAllExistingPlayersRegistered)
 	{
@@ -115,7 +115,7 @@ void AMyGameModeBase::PostLogin(APlayerController* InPlayerController)
 	Super::PostLogin(InPlayerController);
 }
 
-void AMyGameModeBase::PreLogout(APlayerController *InPlayerController)
+void AMultiplayerGameModeBase::PreLogout(APlayerController *InPlayerController)
 {
 	
 	check(IsValid(InPlayerController));
@@ -145,7 +145,7 @@ void AMyGameModeBase::PreLogout(APlayerController *InPlayerController)
 
 	// Get the unique player ID.
 	TSharedPtr<const FUniqueNetId> UniqueNetId = UniqueNetIdRepl.GetUniqueNetId();
-		check(UniqueNetId != nullptr);
+	check(UniqueNetId != nullptr);
 	if (!UniqueNetId.IsValid())
 	{
 		UE_LOG(LogTemp, Error, TEXT("No unique net ID assocated with connection, can not unregister player"));

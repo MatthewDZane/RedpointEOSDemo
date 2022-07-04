@@ -1,17 +1,17 @@
 ﻿
 #if EOS_HAS_AUTHENTICATION
 
-#include "CustomCrossPlatformAccountProvider.h"
+#include "CILogonCrossPlatformAccountProvider.h"
 
-#include "GetJwtForCustomNode.h"
+#include "GetJwtForCILogonNode.h"
 
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/AuthenticationGraph.h"
-#include "CustomAuthenticationGraphNode.h"
+#include "PerformOpenIdLoginForCrossPlatformCILNode.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/Nodes/AuthenticationGraphNodeUntil_Forever.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/Nodes/FailAuthenticationNode.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/Nodes/NoopAuthenticationGraphNode.h"
 
-FCustomCrossPlatformAccountId::FCustomCrossPlatformAccountId(EOS_ProductUserId InFirstPartyAccountId)
+FCILogonCrossPlatformAccountId::FCILogonCrossPlatformAccountId(EOS_ProductUserId InFirstPartyAccountId)
     : DataBytes(nullptr)
     , DataBytesSize(0)
     , FirstPartyAccountId(InFirstPartyAccountId)
@@ -22,16 +22,16 @@ FCustomCrossPlatformAccountId::FCustomCrossPlatformAccountId(EOS_ProductUserId I
     FMemory::Memcpy(this->DataBytes, Str.Get(), Str.Length());
 }
 
-bool FCustomCrossPlatformAccountId::Compare(const FCrossPlatformAccountId &Other) const
+bool FCILogonCrossPlatformAccountId::Compare(const FCrossPlatformAccountId &Other) const
 {
     if (Other.GetType() != GetType())
     {
         return false;
     }
 
-    if (Other.GetType() == CUSTOM_CROSS_PLATFORM_ACCOUNT_ID)
+    if (Other.GetType() == CILOGON_CROSS_PLATFORM_ACCOUNT_ID)
     {
-        const FCustomCrossPlatformAccountId &OtherId = (const FCustomCrossPlatformAccountId &)Other;
+        const FCILogonCrossPlatformAccountId &OtherId = (const FCILogonCrossPlatformAccountId &)Other;
         return OtherId.GetFirstPartyAccountId() == this->GetFirstPartyAccountId();
     }
 
@@ -39,37 +39,37 @@ bool FCustomCrossPlatformAccountId::Compare(const FCrossPlatformAccountId &Other
            (FMemory::Memcmp(GetBytes(), Other.GetBytes(), GetSize()) == 0);
 }
 
-FCustomCrossPlatformAccountId::~FCustomCrossPlatformAccountId()
+FCILogonCrossPlatformAccountId::~FCILogonCrossPlatformAccountId()
 {
     FMemory::Free(this->DataBytes);
 }
 
-FName FCustomCrossPlatformAccountId::GetType() const
+FName FCILogonCrossPlatformAccountId::GetType() const
 {
-    return CUSTOM_CROSS_PLATFORM_ACCOUNT_ID;
+    return CILOGON_CROSS_PLATFORM_ACCOUNT_ID;
 }
 
-const uint8 *FCustomCrossPlatformAccountId::GetBytes() const
+const uint8 *FCILogonCrossPlatformAccountId::GetBytes() const
 {
     return this->DataBytes;
 }
 
-int32 FCustomCrossPlatformAccountId::GetSize() const
+int32 FCILogonCrossPlatformAccountId::GetSize() const
 {
     return this->DataBytesSize;
 }
 
-bool FCustomCrossPlatformAccountId::IsValid() const
+bool FCILogonCrossPlatformAccountId::IsValid() const
 {
     return this->FirstPartyAccountId != 0;
 }
 
-FString FCustomCrossPlatformAccountId::ToString() const
+FString FCILogonCrossPlatformAccountId::ToString() const
 {
     return FString::Printf(TEXT("%lld"), this->FirstPartyAccountId);
 }
 
-FString FCustomCrossPlatformAccountId::GetFirstPartyAccountId() const
+FString FCILogonCrossPlatformAccountId::GetFirstPartyAccountId() const
 {
     if (EOSString_ProductUserId::IsNone(this->FirstPartyAccountId))
     {
@@ -85,7 +85,7 @@ FString FCustomCrossPlatformAccountId::GetFirstPartyAccountId() const
     return TEXT("");
 }
 
-TSharedPtr<const FCrossPlatformAccountId> FCustomCrossPlatformAccountId::ParseFromString(const FString &In)
+TSharedPtr<const FCrossPlatformAccountId> FCILogonCrossPlatformAccountId::ParseFromString(const FString &In)
 {
     EOS_ProductUserId ProductUserId = nullptr;
     if (EOSString_ProductUserId::FromString(In, ProductUserId) != EOS_EResult::EOS_Success)
@@ -93,71 +93,69 @@ TSharedPtr<const FCrossPlatformAccountId> FCustomCrossPlatformAccountId::ParseFr
         UE_LOG(LogTemp, Error, TEXT("Malformed Epic account ID component of unique net ID: %s"), *In);
         return nullptr;
     }
-    return MakeShared<FCustomCrossPlatformAccountId>(ProductUserId);
+    return MakeShared<FCILogonCrossPlatformAccountId>(ProductUserId);
 }
 
-FName FCustomCrossPlatformAccountProvider::GetName()
+FName FCILogonCrossPlatformAccountProvider::GetName()
 {
-    return CUSTOM_CROSS_PLATFORM_ACCOUNT_ID;
+    return CILOGON_CROSS_PLATFORM_ACCOUNT_ID;
 }
 
-TSharedPtr<const FCrossPlatformAccountId> FCustomCrossPlatformAccountProvider::CreateCrossPlatformAccountId(
+TSharedPtr<const FCrossPlatformAccountId> FCILogonCrossPlatformAccountProvider::CreateCrossPlatformAccountId(
     const FString &InStringRepresentation)
 {
-    return FCustomCrossPlatformAccountId::ParseFromString(InStringRepresentation);
+    return FCILogonCrossPlatformAccountId::ParseFromString(InStringRepresentation);
 }
 
-TSharedPtr<const FCrossPlatformAccountId> FCustomCrossPlatformAccountProvider::CreateCrossPlatformAccountId(
+TSharedPtr<const FCrossPlatformAccountId> FCILogonCrossPlatformAccountProvider::CreateCrossPlatformAccountId(
     uint8 *InBytes,
     int32 InSize)
 {
     FString Data = BytesToString(InBytes, InSize);
-    return FCustomCrossPlatformAccountId::ParseFromString(Data);
+    return FCILogonCrossPlatformAccountId::ParseFromString(Data);
 }
 
-TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
+TSharedRef<FAuthenticationGraphNode> FCILogonCrossPlatformAccountProvider::
     GetInteractiveAuthenticationSequence()
 {
     return MakeShared<FAuthenticationGraphNodeUntil_Forever>()
-        ->Add(MakeShared<FGetJwtForCustomNode>())
-        //->Add(MakeShared<FCustomAuthenticationGraphNode>())
-        ->Add(MakeShared<FCustomAuthenticationGraphNode>());
+        ->Add(MakeShared<FGetJwtForCILogonNode>())
+        ->Add(MakeShared<FPerformOpenIdLoginForCrossPlatformCILNode>());
 }
 
-TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
+TSharedRef<FAuthenticationGraphNode> FCILogonCrossPlatformAccountProvider::
     GetInteractiveOnlyAuthenticationSequence()
 {
     return MakeShared<FAuthenticationGraphNodeUntil_Forever>()
-        ->Add(MakeShared<FGetJwtForCustomNode>())
-        //->Add(MakeShared<FCustomAuthenticationGraphNode>())
-        ->Add(MakeShared<FCustomAuthenticationGraphNode>());
+        ->Add(MakeShared<FGetJwtForCILogonNode>())
+        ->Add(MakeShared<FPerformOpenIdLoginForCrossPlatformCILNode>());
 }
 
-TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
+TSharedRef<FAuthenticationGraphNode> FCILogonCrossPlatformAccountProvider::
     GetNonInteractiveAuthenticationSequence(bool bOnlyUseExternalCredentials)
 {
     return MakeShared<FNoopAuthenticationGraphNode>();
 }
 
-TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
+TSharedRef<FAuthenticationGraphNode> FCILogonCrossPlatformAccountProvider::
     GetUpgradeCurrentAccountToCrossPlatformAccountSequence()
 {
     return MakeShared<FNoopAuthenticationGraphNode>();
 }
 
-TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
+TSharedRef<FAuthenticationGraphNode> FCILogonCrossPlatformAccountProvider::
     GetLinkUnusedExternalCredentialsToCrossPlatformAccountSequence()
 {
     return MakeShared<FNoopAuthenticationGraphNode>();
 }
 
-TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
+TSharedRef<FAuthenticationGraphNode> FCILogonCrossPlatformAccountProvider::
     GetNonInteractiveDeauthenticationSequence()
 {
     return MakeShared<FNoopAuthenticationGraphNode>();
 }
 
-TSharedRef<FAuthenticationGraphNode> FCustomCrossPlatformAccountProvider::
+TSharedRef<FAuthenticationGraphNode> FCILogonCrossPlatformAccountProvider::
     GetAutomatedTestingAuthenticationSequence()
 {
 #if !defined(UE_BUILD_SHIPPING) || !UE_BUILD_SHIPPING

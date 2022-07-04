@@ -10,7 +10,7 @@
 #include "Interfaces/OnlinePresenceInterface.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
-#include "ExampleOSS/MyGameModeBase.h"
+#include "ExampleOSS/MultiplayerGameModeBase.h"
 
 void UExampleCPPSubsystem::OnFindSessionForLeaderFollow(
     int32 LocalUserNum,
@@ -313,7 +313,7 @@ TArray<FString> UExampleCPPSubsystem::GetPlayersInSession(const UObject *WorldCo
 
 void UExampleCPPSubsystem::RegisterExistingPlayers(const UObject *WorldContextObject)
 {
-    AMyGameModeBase *GameMode = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode());
+    AMultiplayerGameModeBase *GameMode = Cast<AMultiplayerGameModeBase>(GetWorld()->GetAuthGameMode());
     GameMode->RegisterExistingPlayers();
 }
 
@@ -366,7 +366,7 @@ FUniqueNetIdRepl UExampleCPPSubsystem::RegisterPlayer(APlayerController *InPlaye
 
 void UExampleCPPSubsystem::UnregisterPlayer(APlayerController *InPlayerController, FUniqueNetIdRepl UniqueNetIdRepl)
 {
-    AMyGameModeBase *GameMode = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode());
+    AMultiplayerGameModeBase *GameMode = Cast<AMultiplayerGameModeBase>(GetWorld()->GetAuthGameMode());
     GameMode->PreLogout(InPlayerController);
 }
 

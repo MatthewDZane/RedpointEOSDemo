@@ -7,9 +7,9 @@
 #include "CoreMinimal.h"
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/AuthenticationGraph.h"
 
-#define CUSTOM_EOS_AUTH_GRAPH FName(TEXT("CustomAuthGraph"))
+#define CILOGON_EOS_AUTH_GRAPH FName(TEXT("CILogonAuthGraph"))
 
-class FCustomAuthenticationGraph : public FAuthenticationGraph
+class FCILogonAuthenticationGraph : public FAuthenticationGraph
 {
 protected:
 	virtual TSharedRef<FAuthenticationGraphNode> CreateGraph(

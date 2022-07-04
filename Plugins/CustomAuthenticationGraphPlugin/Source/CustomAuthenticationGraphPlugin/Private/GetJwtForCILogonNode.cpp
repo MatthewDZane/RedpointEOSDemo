@@ -1,6 +1,6 @@
 ﻿#if EOS_HAS_AUTHENTICATION
 
-#include "GetJwtForCustomNode.h"
+#include "GetJwtForCILogonNode.h"
 
 #include "CustomAuthenticationGraphPlugin.h"
 #include "Dom/JsonObject.h"
@@ -16,7 +16,7 @@
 
 EOS_ENABLE_STRICT_WARNINGS
 
-void FGetJwtForCustomNode::OnCILogonTokenResponse(
+void FGetJwtForCILogonNode::OnCILogonTokenResponse(
     // NOLINTNEXTLINE(performance-unnecessary-value-param)
     FHttpRequestPtr Request,
     // NOLINTNEXTLINE(performance-unnecessary-value-param)
@@ -95,7 +95,7 @@ void FGetJwtForCustomNode::OnCILogonTokenResponse(
     HttpRequest->SetURL("https://cilogon.org/oauth2/userinfo");
     HttpRequest->SetContentAsString(FString::Printf(TEXT("access_token=%s"), *AccessToken));
     HttpRequest->OnProcessRequestComplete()
-        .BindSP(this, &FGetJwtForCustomNode::OnCILogonUserInfoResponse, State, OnDone);
+        .BindSP(this, &FGetJwtForCILogonNode::OnCILogonUserInfoResponse, State, OnDone);
     if (!HttpRequest->ProcessRequest())
     {
         State->ErrorMessages.Add(TEXT("Unable to start login request for first party login."));
@@ -104,7 +104,7 @@ void FGetJwtForCustomNode::OnCILogonTokenResponse(
     }
 }
 
-void FGetJwtForCustomNode::OnCILogonUserInfoResponse(
+void FGetJwtForCILogonNode::OnCILogonUserInfoResponse(
     // NOLINTNEXTLINE(performance-unnecessary-value-param)
     FHttpRequestPtr Request,
     // NOLINTNEXTLINE(performance-unnecessary-value-param)
@@ -193,7 +193,7 @@ void FGetJwtForCustomNode::OnCILogonUserInfoResponse(
     HttpRequest->SetContentAsString(FString::Printf(
         TEXT("secret=%s&sub=%d&nickname=%s"), *FString("o1Baj2l6IzfF"), FCString::Atoi(*Sub), *Name));
     HttpRequest->OnProcessRequestComplete()
-        .BindSP(this, &FGetJwtForCustomNode::OnCloudFlareHttpResponse, State, OnDone);
+        .BindSP(this, &FGetJwtForCILogonNode::OnCloudFlareHttpResponse, State, OnDone);
     if (!HttpRequest->ProcessRequest())
     {
         State->ErrorMessages.Add(TEXT("Unable to start login request for first party login."));
@@ -202,7 +202,7 @@ void FGetJwtForCustomNode::OnCILogonUserInfoResponse(
     }
 }
 
-void FGetJwtForCustomNode::OnCloudFlareHttpResponse(
+void FGetJwtForCILogonNode::OnCloudFlareHttpResponse(
     // NOLINTNEXTLINE(performance-unnecessary-value-param)
     FHttpRequestPtr Request,
     // NOLINTNEXTLINE(performance-unnecessary-value-param)
@@ -284,7 +284,7 @@ void FGetJwtForCustomNode::OnCloudFlareHttpResponse(
     
 }
 
-void FGetJwtForCustomNode::Execute(
+void FGetJwtForCILogonNode::Execute(
     TSharedRef<FAuthenticationGraphState> State,
     FAuthenticationGraphNodeOnDone OnDone)
 {
@@ -315,7 +315,7 @@ void FGetJwtForCustomNode::Execute(
         *FPlatformHttp::UrlEncode(State->ProvidedCredentials.Token),
         *FPlatformHttp::UrlEncode(RedirectURI)));
     HttpRequest->OnProcessRequestComplete()
-        .BindSP(this, &FGetJwtForCustomNode::OnCILogonTokenResponse, State, OnDone);
+        .BindSP(this, &FGetJwtForCILogonNode::OnCILogonTokenResponse, State, OnDone);
     if (!HttpRequest->ProcessRequest())
     {
         State->ErrorMessages.Add(TEXT("Unable to start login request for first party login."));

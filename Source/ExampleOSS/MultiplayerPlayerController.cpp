@@ -3,13 +3,13 @@
 
 #include "MultiplayerPlayerController.h"
 
-#include "MyGameModeBase.h"
+#include "MultiplayerGameModeBase.h"
 
 void AMultiplayerPlayerController::OnNetCleanup(UNetConnection *Connection)
 {
 	if (GetLocalRole() == ROLE_Authority && PlayerState != NULL)
 	{
-		AMyGameModeBase *GameMode = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode());
+		AMultiplayerGameModeBase *GameMode = Cast<AMultiplayerGameModeBase>(GetWorld()->GetAuthGameMode());
 		if (GameMode)
 		{
 			GameMode->PreLogout(this);

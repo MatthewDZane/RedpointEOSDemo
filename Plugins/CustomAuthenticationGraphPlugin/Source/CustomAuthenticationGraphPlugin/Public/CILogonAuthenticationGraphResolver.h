@@ -2,7 +2,7 @@
 
 #include "OnlineSubsystemRedpointEOS/Shared/Authentication/CrossPlatform/EpicGames/GatherEASAccountsWithExternalCredentialsNode.h"
 
-class FCustomAuthenticationGraphResolver
+class FCILogonAuthenticationGraphResolver
 {
 public:
 	FName Resolve(TSharedRef<class FAuthenticationGraphRegistry> InRegistry,
